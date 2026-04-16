@@ -65,4 +65,4 @@ Feel free to check [issues page](https://github.com/Hyena0x/timepour/issues).
 
 ## 📝 License
 
-This project is [MIT](https://github.com/yourusername/timepour/blob/master/LICENSE) licensed.
+This project is [MIT](https://github.com/Hyena0x/timepour/blob/main/LICENSE) licensed.
