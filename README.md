@@ -1,68 +1,123 @@
 <div align="center">
   <h1>🎮 Timepour</h1>
-  <p><strong>A visceral, block-stacking terminal countdown with deterministic Tetris-style physics.</strong></p>
+  <p><strong>An arcade-style terminal focus timer where passing time fills the screen with a deterministic tetromino stack.</strong></p>
 
-  [![Crates.io](https://img.shields.io/crates/v/timepour.svg)](https://crates.io/crates/timepour)
-  [![License](https://img.shields.io/crates/l/timepour.svg)](https://github.com/Hyena0x/timepour/blob/main/LICENSE)
+  [![License](https://img.shields.io/github/license/Hyena0x/timepour)](https://github.com/Hyena0x/timepour/blob/main/LICENSE)
   [![Build Status](https://img.shields.io/github/actions/workflow/status/Hyena0x/timepour/rust.yml)](https://github.com/Hyena0x/timepour/actions)
 </div>
 
 <br />
 
-**Timepour** transforms your boring productivity sessions into an immersive arcade experience. Instead of watching a standard clock tick down, watch a deterministic, pro-level AI perfectly pack a Tetris matrix as your time passes.
+Timepour turns a plain countdown into something you can feel.
 
-When your time is up, the vibrant blocks wash away into a dead monochrome silence.
+Instead of staring at shrinking digits, you watch time accumulate as a clean, deterministic stack of falling tetrominoes. Focus sessions glow hot. Break sessions cool down. When the timer ends, the board dies into grayscale and the run is over.
 
-## ✨ Features
+It is a small terminal tool, but it feels more like a tiny arcade cabinet for your next focus block.
 
-- **Pro-Player Packing AI**: A custom heuristic algorithm simulates perfect 4D rotations and horizontal glides, packing the board tightly without gaps.
-- **Time Synchronization**: The stack perfectly syncs to your timeline. When the screen fills, your time is exactly up.
-- **Immersive Arcade UI**: Featuring an integrated 5x5 pixel-art clock that visually syncs to the session color schema.
-- **Contextual Ambient Lighting**: Red UI boardings for intense *Focus* sessions, and mint-cyan for *Break* sessions.
-- **Grayscale Death Effect**: The entire board grays out dynamically at the exact millisecond the countdown reaches zero.
+## Why it stands out
 
-## 🚀 Installation
+- Visual by default: time is represented as motion and density, not just numbers.
+- Deterministic feel: the stack progression is consistent and intentional instead of noisy or random.
+- Terminal-native: fast startup, no account, no browser tab, no desktop bloat.
+- Session mood shift: focus and break modes use different color themes.
+- Built for presence: the timer is harder to ignore than a quiet menu bar app.
 
-Ensure you have Rust installed, then run:
+## What you get
+
+- A full-screen TUI countdown experience
+- Animated tetromino stacking tied to countdown progress
+- Pixel-style countdown digits in the side panel
+- Focus mode and break mode
+- Pause/resume during a session
+- Clean quit with simple keyboard controls
+- A completion state with a strong visual payoff
+
+## Installation
+
+Timepour is not published to crates.io yet.
+
+For now, install from source:
 
 ```bash
-cargo install timepour
+cargo install --git https://github.com/Hyena0x/timepour timepour
 ```
 
-*(Alternatively, clone this repository and run `cargo build --release`)*
+Or clone and build locally:
 
-## 🕹️ Usage
+```bash
+git clone https://github.com/Hyena0x/timepour.git
+cd timepour
+cargo build --release
+```
 
-Timepour uses a dead-simple declarative CLI interface contextually modeled around standard Pomodoro structures.
+## Usage
 
-### Focus Mode (Default 25 minutes)
+Show help:
+
+```bash
+timepour --help
+```
+
+Start a default focus session (25 minutes):
+
 ```bash
 timepour start
 ```
 
-### Custom Focus Duration (e.g., 1 hour and 30 seconds)
+Start a custom focus session in minutes:
+
 ```bash
-timepour start 60 30
+timepour start 15
 ```
 
-### Break Mode
+Start a default break session (5 minutes):
+
 ```bash
-timepour break 5 0
+timepour break
 ```
 
-### In-App Controls
-- `p` - Pause / Resume the timer and the falling blocks.
-- `q` - Quit immediately.
+Start a custom break session in minutes:
 
-## 🧠 Why we built this
+```bash
+timepour break 10
+```
 
-Traditional desktop productivity timers can sit quietly to the point of being ignored, or become an anxiety-inducing numeric spinner. Timepour was designed to offload time anxiety into an autonomous aesthetic artifact. 
+## Controls
 
-## 🤝 Contributing
+- `p` — pause or resume
+- `q` — quit
+- `Esc` / `Enter` — exit the session
 
-Contributions, issues, and feature requests are welcome! 
-Feel free to check [issues page](https://github.com/Hyena0x/timepour/issues).
+## Best used when
 
-## 📝 License
+- You want a Pomodoro timer that feels alive
+- You work mostly in the terminal
+- You respond better to ambient visual pressure than passive clocks
+- You want a lightweight ritual to begin focus sessions
 
-This project is [MIT](https://github.com/Hyena0x/timepour/blob/main/LICENSE) licensed.
+## Design direction
+
+Timepour is not trying to be a full productivity suite.
+
+It is a single-purpose terminal object: open it, feel the session, finish the block, move on.
+
+That constraint is the product.
+
+## Roadmap ideas
+
+- Sound toggle / optional completion audio themes
+- Preset session profiles
+- Better CLI ergonomics for seconds-based sessions
+- Theme variants and display modes
+- Optional packaged binaries and Homebrew distribution
+
+## Contributing
+
+Issues, ideas, UX feedback, and PRs are welcome.
+
+- Bug reports: https://github.com/Hyena0x/timepour/issues
+- Pull requests: https://github.com/Hyena0x/timepour/pulls
+
+## License
+
+MIT
