@@ -4,7 +4,7 @@ use clap::Parser;
 #[command(
     name = "timepour",
     version,
-    about = "An arcade-style terminal focus timer with a deterministic tetromino stack"
+    about = "A terminal focus timer with a deterministic tetromino stack"
 )]
 pub struct Cli {
     #[command(subcommand)]
