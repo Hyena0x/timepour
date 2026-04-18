@@ -307,7 +307,7 @@ fn draw_view<'a>(frame: &mut ratatui::Frame<'_>, ctx: RenderContext<'a>) {
                 .alignment(Alignment::Center)
         }
         ClockSize::Small => Paragraph::new(Line::from(Span::styled(
-            format!("{}", ctx.countdown),
+            ctx.countdown.to_string(),
             Style::default()
                 .fg(theme_color)
                 .add_modifier(Modifier::BOLD),
