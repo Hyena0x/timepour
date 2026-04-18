@@ -84,3 +84,40 @@ pub fn render_pixel_digits<'a>(text: &str, color: Color) -> Vec<Line<'a>> {
         .map(|s| Line::from(Span::styled(s, Style::default().fg(color))))
         .collect()
 }
+
+/// A 3x3 Dot Matrix font mapping for digits 0-9 and the separator ':'.
+/// Utilizes Unicode half-blocks to simulate pseudo-6x3 resolution, ensuring perfect loops.
+const MEDIUM_DIGIT_FONT: [&[&str]; 11] = [
+    &["█▀█", "█ █", "█▄█"], // 0
+    &[" █ ", " █ ", " █ "], // 1
+    &["▀▀█", "█▀▀", "█▄▄"], // 2
+    &["▀▀█", " ▀█", "▄▄█"], // 3
+    &["█ █", "▀▀█", "  █"], // 4
+    &["█▀▀", "▀▀█", "▄▄█"], // 5
+    &["█▀▀", "█▀█", "█▄█"], // 6
+    &["▀▀█", "  █", "  █"], // 7
+    &["█▀█", "█▀█", "█▄█"], // 8
+    &["█▀█", "▀▀█", "▄▄█"], // 9
+    &["   ", " ▀ ", " ▄ "], // :
+];
+
+/// Translates a raw time string (e.g., "12:59") into a vector of 3 styled `Line`s.
+pub fn render_medium_pixel_digits<'a>(text: &str, color: Color) -> Vec<Line<'a>> {
+    let mut lines = vec![String::new(); 3];
+    for c in text.chars() {
+        let idx = match c {
+            '0'..='9' => (c as u32 - '0' as u32) as usize,
+            ':' => 10,
+            _ => continue,
+        };
+        for i in 0..3 {
+            lines[i].push_str(MEDIUM_DIGIT_FONT[idx][i]);
+            lines[i].push(' ');
+        }
+    }
+
+    lines
+        .into_iter()
+        .map(|s| Line::from(Span::styled(s, Style::default().fg(color))))
+        .collect()
+}
