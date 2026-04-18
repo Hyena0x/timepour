@@ -184,17 +184,21 @@ fn draw_view<'a>(frame: &mut ratatui::Frame<'_>, ctx: RenderContext<'a>) {
 
     let side_area_h = ctx.side_area.height;
     let side_area_w = ctx.side_area.width;
-    
+
     // Hide 'TIME' borders to reclaim 2 precious vertical rows if height is extremely tight
     let show_time_borders = side_area_h >= 10;
     let b_size = if show_time_borders { 2 } else { 0 };
 
-    enum ClockSize { Giant, Medium, Small }
-    
+    enum ClockSize {
+        Giant,
+        Medium,
+        Small,
+    }
+
     // Size required for text without borders: Giant(5), Medium(3), Small(1)
     let giant_h = 5 + b_size;
     let medium_h = 3 + b_size;
-    
+
     let clock_size = if side_area_w < 22 {
         ClockSize::Small
     } else if side_area_h >= giant_h {
@@ -220,7 +224,7 @@ fn draw_view<'a>(frame: &mut ratatui::Frame<'_>, ctx: RenderContext<'a>) {
     if show_status {
         side_constraints.push(Constraint::Length(4)); // Status
     }
-    
+
     side_constraints.push(Constraint::Length(clock_height)); // Time
 
     if show_next {
@@ -295,18 +299,21 @@ fn draw_view<'a>(frame: &mut ratatui::Frame<'_>, ctx: RenderContext<'a>) {
             Paragraph::new(pixel_lines)
                 .block(time_block.clone())
                 .alignment(Alignment::Center)
-        },
+        }
         ClockSize::Medium => {
             let pixel_lines = render_medium_pixel_digits(&ctx.countdown, theme_color);
             Paragraph::new(pixel_lines)
                 .block(time_block.clone())
                 .alignment(Alignment::Center)
-        },
-        ClockSize::Small => {
-            Paragraph::new(Line::from(Span::styled(format!("{}", ctx.countdown), Style::default().fg(theme_color).add_modifier(Modifier::BOLD))))
-                .block(time_block.clone())
-                .alignment(Alignment::Center)
         }
+        ClockSize::Small => Paragraph::new(Line::from(Span::styled(
+            format!("{}", ctx.countdown),
+            Style::default()
+                .fg(theme_color)
+                .add_modifier(Modifier::BOLD),
+        )))
+        .block(time_block.clone())
+        .alignment(Alignment::Center),
     };
 
     frame.render_widget(clock_widget, side_layout[layout_idx]);
