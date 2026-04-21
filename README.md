@@ -21,10 +21,11 @@ Small tool. Strong presence.
 
 ## Install
 
-Not on crates.io yet.
+Timepour is currently git-only. The crates.io release is intentionally pending
+until the CLI behavior and test coverage are tightened.
 
 ```bash
-cargo install --git https://github.com/Hyena0x/timepour timepour
+cargo install --git https://github.com/Hyena0x/timepour.git --locked
 ```
 
 Or build locally:
@@ -32,7 +33,7 @@ Or build locally:
 ```bash
 git clone https://github.com/Hyena0x/timepour.git
 cd timepour
-cargo build --release
+cargo build --release --locked
 ```
 
 ## Usage

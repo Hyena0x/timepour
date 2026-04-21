@@ -130,7 +130,7 @@ impl BlockStackRenderer {
         let shape = self.shape_for(next_piece);
         let color = self.color_for_piece(next_piece);
 
-        let row_offset = if next_piece.is_multiple_of(7) { 0 } else { 1 };
+        let row_offset = if next_piece % 7 == 0 { 0 } else { 1 };
 
         let mut lines = Vec::new();
         for r in 0..4_u16 {
