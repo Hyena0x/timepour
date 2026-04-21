@@ -11,7 +11,7 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Commands::Start { minutes, seconds } => app::run(SessionKind::Focus, minutes, seconds),
-        Commands::Break { minutes } => app::run(SessionKind::Break, minutes, None),
+        Commands::Start { duration } => app::run(SessionKind::Focus, duration),
+        Commands::Break { duration } => app::run(SessionKind::Break, duration),
     }
 }

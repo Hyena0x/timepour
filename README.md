@@ -38,6 +38,8 @@ cargo build --release --locked
 
 ## Usage
 
+Durations are in minutes by default. You can also use `15m`, `90s`, `1:30`, or `1m30s`.
+
 ```bash
 # 25-minute focus session
 timepour start
@@ -45,11 +47,17 @@ timepour start
 # 15-minute focus session
 timepour start 15
 
+# 90-second focus session
+timepour start 1:30
+
 # 5-minute break
 timepour break
 
 # 10-minute break
 timepour break 10
+
+# 90-second break
+timepour break 90s
 ```
 
 ## Controls

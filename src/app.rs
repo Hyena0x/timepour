@@ -40,13 +40,9 @@ struct RenderContext<'a> {
 /// The main entry point for the Timepour countdown UI experience.
 /// Initializes the terminal, manages the run loop, handles user input,
 /// and delegates frame computation to the rendering engine.
-pub fn run(
-    kind: SessionKind,
-    minutes: Option<u64>,
-    seconds: Option<u64>,
-) -> color_eyre::Result<()> {
+pub fn run(kind: SessionKind, duration: Option<Duration>) -> color_eyre::Result<()> {
     let started_at = Instant::now();
-    let mut timer = ActiveTimer::new(kind, minutes, seconds, started_at);
+    let mut timer = ActiveTimer::new(kind, duration, started_at);
     let mut terminal = setup_terminal()?;
     let renderer = BlockStackRenderer::new();
     let mut frozen_tick = 0_u64;

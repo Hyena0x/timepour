@@ -476,3 +476,49 @@ impl BlockStackRenderer {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn build_frame_returns_no_lines_for_empty_dimensions() {
+        let renderer = BlockStackRenderer::new();
+
+        assert!(
+            renderer
+                .build_frame(0, 10, 0.5, 0, VisualState::Running)
+                .is_empty()
+        );
+        assert!(
+            renderer
+                .build_frame(10, 0, 0.5, 0, VisualState::Running)
+                .is_empty()
+        );
+    }
+
+    #[test]
+    fn build_frame_height_matches_requested_rows() {
+        let renderer = BlockStackRenderer::new();
+        let frame = renderer.build_frame(8, 12, 0.5, 0, VisualState::Running);
+
+        assert_eq!(frame.len(), 12);
+    }
+
+    #[test]
+    fn build_frame_clamps_progress_above_one() {
+        let renderer = BlockStackRenderer::new();
+        let full_frame = renderer.build_frame(8, 12, 1.0, 0, VisualState::Completed);
+        let overfull_frame = renderer.build_frame(8, 12, 2.0, 0, VisualState::Completed);
+
+        assert_eq!(overfull_frame, full_frame);
+    }
+
+    #[test]
+    fn next_piece_preview_is_always_four_lines() {
+        let renderer = BlockStackRenderer::new();
+        let preview = renderer.build_next_piece_preview(8, 12, 0.0);
+
+        assert_eq!(preview.len(), 4);
+    }
+}

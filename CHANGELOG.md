@@ -3,6 +3,8 @@
 ## Unreleased
 
 - Clarified the current git-only install path while the crates.io release is pending.
+- Replaced minute/second flags with a single `DURATION` argument supporting `15`, `15m`, `90s`, `1:30`, and `1m30s`.
+- Added CLI, timer, and renderer unit tests.
 - Declared Rust 1.85 as the minimum supported Rust version.
 - Started tracking Cargo.lock so git installs can use locked dependency versions.
 - Added responsive terminal layout improvements and medium-sized pixel digits.

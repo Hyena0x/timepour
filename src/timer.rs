@@ -37,20 +37,11 @@ impl ActiveTimer {
     ///
     /// # Arguments
     /// * `kind` - The type of session (Focus/Break).
-    /// * `minutes` - Optional explicit minute override.
-    /// * `seconds` - Optional explicit second override (priority over minutes).
+    /// * `duration` - Optional explicit duration override.
     /// * `started_at` - The absolute start timestamp.
-    pub fn new(
-        kind: SessionKind,
-        minutes: Option<u64>,
-        seconds: Option<u64>,
-        started_at: Instant,
-    ) -> Self {
-        let total_duration = if let Some(seconds) = seconds {
-            Duration::from_secs(seconds)
-        } else {
-            Duration::from_secs(minutes.unwrap_or(kind.default_minutes()) * 60)
-        };
+    pub fn new(kind: SessionKind, duration: Option<Duration>, started_at: Instant) -> Self {
+        let total_duration =
+            duration.unwrap_or_else(|| Duration::from_secs(kind.default_minutes() * 60));
 
         Self {
             kind,
@@ -119,5 +110,77 @@ impl ActiveTimer {
         } else {
             self.elapsed_at(now).as_secs_f32() / self.total_duration.as_secs_f32()
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn focus_defaults_to_twenty_five_minutes() {
+        let started_at = Instant::now();
+        let timer = ActiveTimer::new(SessionKind::Focus, None, started_at);
+
+        assert_eq!(timer.total_duration(), Duration::from_secs(25 * 60));
+    }
+
+    #[test]
+    fn break_defaults_to_five_minutes() {
+        let started_at = Instant::now();
+        let timer = ActiveTimer::new(SessionKind::Break, None, started_at);
+
+        assert_eq!(timer.total_duration(), Duration::from_secs(5 * 60));
+    }
+
+    #[test]
+    fn explicit_duration_configures_timer() {
+        let started_at = Instant::now();
+        let timer = ActiveTimer::new(
+            SessionKind::Focus,
+            Some(Duration::from_secs(90)),
+            started_at,
+        );
+
+        assert_eq!(timer.total_duration(), Duration::from_secs(90));
+    }
+
+    #[test]
+    fn pause_freezes_elapsed_time_until_resume() {
+        let started_at = Instant::now();
+        let mut timer = ActiveTimer::new(
+            SessionKind::Focus,
+            Some(Duration::from_secs(60)),
+            started_at,
+        );
+
+        timer.pause(started_at + Duration::from_secs(10));
+
+        assert_eq!(
+            timer.elapsed_at(started_at + Duration::from_secs(30)),
+            Duration::from_secs(10)
+        );
+
+        timer.resume(started_at + Duration::from_secs(40));
+
+        assert_eq!(
+            timer.elapsed_at(started_at + Duration::from_secs(50)),
+            Duration::from_secs(20)
+        );
+    }
+
+    #[test]
+    fn remaining_time_saturates_at_zero() {
+        let started_at = Instant::now();
+        let timer = ActiveTimer::new(
+            SessionKind::Focus,
+            Some(Duration::from_secs(10)),
+            started_at,
+        );
+
+        assert_eq!(
+            timer.remaining_at(started_at + Duration::from_secs(20)),
+            Duration::ZERO
+        );
     }
 }
