@@ -47,107 +47,124 @@ pub fn run(kind: SessionKind, duration: Option<Duration>) -> color_eyre::Result<
     let renderer = BlockStackRenderer::new();
     let mut frozen_tick = 0_u64;
 
-    loop {
-        let now = Instant::now();
-        let remaining = timer.remaining_at(now);
-        let progress = timer.progress_at(now);
-        let running_tick = started_at.elapsed().as_millis() as u64 / 120;
+    let result: color_eyre::Result<()> = (|| {
+        loop {
+            let now = Instant::now();
+            let remaining = timer.remaining_at(now);
+            let progress = timer.progress_at(now);
+            let running_tick = started_at.elapsed().as_millis() as u64 / 120;
 
-        let visual_state = if remaining.is_zero() {
-            VisualState::Completed
-        } else if timer.is_paused() {
-            VisualState::Paused
-        } else {
-            VisualState::Running
-        };
-
-        let tick = if timer.is_paused() {
-            frozen_tick
-        } else {
-            frozen_tick = running_tick;
-            running_tick
-        };
-
-        terminal.draw(|frame| {
-            let area = frame.area();
-
-            let main_color = match kind {
-                SessionKind::Focus => Color::Red,
-                SessionKind::Break => Color::Cyan, // Or Green
-            };
-
-            let show_outer_borders = area.height >= 12 && area.width >= 35;
-            let outer_block = if show_outer_borders {
-                Block::default()
-                    .borders(Borders::ALL)
-                    .border_type(BorderType::Thick)
-                    .border_style(Style::default().fg(main_color))
-                    .title(Line::from(" 🎮 timepour ").alignment(Alignment::Center))
+            let visual_state = if remaining.is_zero() {
+                VisualState::Completed
+            } else if timer.is_paused() {
+                VisualState::Paused
             } else {
-                Block::default().padding(ratatui::widgets::Padding::horizontal(1))
+                VisualState::Running
             };
 
-            let inner_area = outer_block.inner(area);
-
-            let layout = Layout::default()
-                .direction(Direction::Horizontal)
-                .constraints([Constraint::Min(0), Constraint::Length(26)])
-                .split(inner_area);
-
-            let playfield_area = layout[0];
-            let side_area = layout[1];
-
-            let cols = playfield_area.width / 2;
-            let rows = playfield_area.height;
-
-            let ctx = RenderContext {
-                kind,
-                stack: renderer.build_frame(cols, rows, progress, tick, visual_state),
-                next_preview: renderer.build_next_piece_preview(cols, rows, progress),
-                countdown: format_remaining(remaining),
-                visual_state,
-                playfield_area,
-                side_area,
-                outer_block,
-                area,
+            let tick = if timer.is_paused() {
+                frozen_tick
+            } else {
+                frozen_tick = running_tick;
+                running_tick
             };
 
-            draw_view(frame, ctx);
-        })?;
+            terminal.draw(|frame| {
+                let area = frame.area();
 
-        if event::poll(Duration::from_millis(100))?
-            && let Event::Key(key) = event::read()?
-        {
-            match key.code {
-                KeyCode::Char('q') | KeyCode::Enter | KeyCode::Esc => break,
-                KeyCode::Char('p') => {
-                    timer.toggle_pause(Instant::now());
-                    if timer.is_paused() {
-                        frozen_tick = running_tick;
+                let main_color = match kind {
+                    SessionKind::Focus => Color::Red,
+                    SessionKind::Break => Color::Cyan, // Or Green
+                };
+
+                let show_outer_borders = area.height >= 12 && area.width >= 35;
+                let outer_block = if show_outer_borders {
+                    Block::default()
+                        .borders(Borders::ALL)
+                        .border_type(BorderType::Thick)
+                        .border_style(Style::default().fg(main_color))
+                        .title(Line::from(" 🎮 timepour ").alignment(Alignment::Center))
+                } else {
+                    Block::default().padding(ratatui::widgets::Padding::horizontal(1))
+                };
+
+                let inner_area = outer_block.inner(area);
+
+                let layout = Layout::default()
+                    .direction(Direction::Horizontal)
+                    .constraints([Constraint::Min(0), Constraint::Length(26)])
+                    .split(inner_area);
+
+                let playfield_area = layout[0];
+                let side_area = layout[1];
+
+                let cols = playfield_area.width / 2;
+                let rows = playfield_area.height;
+
+                let ctx = RenderContext {
+                    kind,
+                    stack: renderer.build_frame(cols, rows, progress, tick, visual_state),
+                    next_preview: renderer.build_next_piece_preview(cols, rows, progress),
+                    countdown: format_remaining(remaining),
+                    visual_state,
+                    playfield_area,
+                    side_area,
+                    outer_block,
+                    area,
+                };
+
+                draw_view(frame, ctx);
+            })?;
+
+            if event::poll(Duration::from_millis(100))?
+                && let Event::Key(key) = event::read()?
+            {
+                match key.code {
+                    KeyCode::Char('q') | KeyCode::Enter | KeyCode::Esc => break,
+                    KeyCode::Char('p') => {
+                        timer.toggle_pause(Instant::now());
+                        if timer.is_paused() {
+                            frozen_tick = running_tick;
+                        }
                     }
+                    _ => {}
                 }
-                _ => {}
             }
         }
-    }
 
-    restore_terminal(terminal)?;
+        Ok(())
+    })();
+
+    let restore_result = restore_terminal(&mut terminal);
+    result?;
+    restore_result?;
+
     println!("\x07timepour complete");
     Ok(())
 }
 
 fn setup_terminal() -> color_eyre::Result<Terminal<CrosstermBackend<Stdout>>> {
-    enable_raw_mode()?;
-    let mut stdout = io::stdout();
-    execute!(stdout, EnterAlternateScreen)?;
+    let stdout = io::stdout();
     let backend = CrosstermBackend::new(stdout);
-    Ok(Terminal::new(backend)?)
+    let mut terminal = Terminal::new(backend)?;
+
+    enable_raw_mode()?;
+    if let Err(error) = execute!(terminal.backend_mut(), EnterAlternateScreen) {
+        let _ = disable_raw_mode();
+        return Err(error.into());
+    }
+
+    Ok(terminal)
 }
 
-fn restore_terminal(mut terminal: Terminal<CrosstermBackend<Stdout>>) -> color_eyre::Result<()> {
-    disable_raw_mode()?;
-    execute!(terminal.backend_mut(), LeaveAlternateScreen)?;
-    terminal.show_cursor()?;
+fn restore_terminal(terminal: &mut Terminal<CrosstermBackend<Stdout>>) -> color_eyre::Result<()> {
+    let raw_mode_result = disable_raw_mode();
+    let alternate_screen_result = execute!(terminal.backend_mut(), LeaveAlternateScreen);
+    let cursor_result = terminal.show_cursor();
+
+    raw_mode_result?;
+    alternate_screen_result?;
+    cursor_result?;
     Ok(())
 }
 

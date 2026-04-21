@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Clarified the current git-only install path while the crates.io release is pending.
+- Restore the terminal on TUI errors.
 - Replaced minute/second flags with a single `DURATION` argument supporting `15`, `15m`, `90s`, `1:30`, and `1m30s`.
 - Added CLI, timer, and renderer unit tests.
 - Declared Rust 1.85 as the minimum supported Rust version.
