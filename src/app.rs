@@ -120,7 +120,7 @@ pub fn run(kind: SessionKind, duration: Option<Duration>) -> color_eyre::Result<
                 if let Event::Key(key) = event::read()? {
                     match key.code {
                         KeyCode::Char('q') | KeyCode::Enter | KeyCode::Esc => break,
-                        KeyCode::Char('p') => {
+                        KeyCode::Char('p') if key.kind == event::KeyEventKind::Press => {
                             timer.toggle_pause(Instant::now());
                             if timer.is_paused() {
                                 frozen_tick = running_tick;
