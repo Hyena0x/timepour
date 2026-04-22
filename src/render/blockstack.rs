@@ -74,10 +74,10 @@ impl BlockStackRenderer {
             let mut spans = Vec::with_capacity(cols as usize);
             for col in 0..cols {
                 let mut cell_filled = None;
-                if let Some(active) = &active_info
-                    && active.cells.iter().any(|(r, c)| *r == row && *c == col)
-                {
-                    cell_filled = Some((active.color, "██"));
+                if let Some(active) = &active_info {
+                    if active.cells.iter().any(|(r, c)| *r == row && *c == col) {
+                        cell_filled = Some((active.color, "██"));
+                    }
                 }
 
                 let is_ghost = ghost_cells.iter().any(|(r, c)| *r == row && *c == col);

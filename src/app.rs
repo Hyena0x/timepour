@@ -116,18 +116,18 @@ pub fn run(kind: SessionKind, duration: Option<Duration>) -> color_eyre::Result<
                 draw_view(frame, ctx);
             })?;
 
-            if event::poll(Duration::from_millis(100))?
-                && let Event::Key(key) = event::read()?
-            {
-                match key.code {
-                    KeyCode::Char('q') | KeyCode::Enter | KeyCode::Esc => break,
-                    KeyCode::Char('p') => {
-                        timer.toggle_pause(Instant::now());
-                        if timer.is_paused() {
-                            frozen_tick = running_tick;
+            if event::poll(Duration::from_millis(100))? {
+                if let Event::Key(key) = event::read()? {
+                    match key.code {
+                        KeyCode::Char('q') | KeyCode::Enter | KeyCode::Esc => break,
+                        KeyCode::Char('p') => {
+                            timer.toggle_pause(Instant::now());
+                            if timer.is_paused() {
+                                frozen_tick = running_tick;
+                            }
                         }
+                        _ => {}
                     }
-                    _ => {}
                 }
             }
         }

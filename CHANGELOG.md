@@ -8,6 +8,7 @@
 - Added CLI, timer, and renderer unit tests.
 - Added GitHub Actions coverage for the Rust 1.85 minimum supported Rust version.
 - Kept locked transitive TUI dependencies compatible with Rust 1.85.
+- Removed let-chain syntax that is not stable on Rust 1.85.
 - Declared Rust 1.85 as the minimum supported Rust version.
 - Started tracking Cargo.lock so git installs can use locked dependency versions.
 - Added responsive terminal layout improvements and medium-sized pixel digits.
