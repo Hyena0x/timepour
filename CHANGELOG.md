@@ -7,6 +7,7 @@
 - Replaced minute/second flags with a single `DURATION` argument supporting `15`, `15m`, `90s`, `1:30`, and `1m30s`.
 - Added CLI, timer, and renderer unit tests.
 - Added GitHub Actions coverage for the Rust 1.85 minimum supported Rust version.
+- Added GitHub Actions package verification for release readiness.
 - Kept locked transitive TUI dependencies compatible with Rust 1.85.
 - Removed let-chain syntax that is not stable on Rust 1.85.
 - Declared Rust 1.85 as the minimum supported Rust version.
