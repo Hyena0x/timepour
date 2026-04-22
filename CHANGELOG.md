@@ -2,8 +2,12 @@
 
 ## Unreleased
 
+No unreleased changes.
+
+## v0.1.1 - 2026-04-22
+
 - Clarified the current git-only install path while the crates.io release is pending.
-- Restore the terminal on TUI errors.
+- Restored the terminal on TUI errors.
 - Promoted `DURATION` to the top-level argument and changed break mode to `--break` / `-b`.
 - Replaced minute/second flags with a single `DURATION` argument supporting `15`, `15m`, `90s`, `1:30`, `1h30m`, and `1m30s`.
 - Added CLI, timer, and renderer unit tests.

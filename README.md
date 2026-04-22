@@ -21,8 +21,8 @@ Small tool. Strong presence.
 
 ## Install
 
-Timepour is currently git-only. The crates.io release is intentionally pending
-until the CLI behavior and test coverage are tightened.
+Timepour is currently git-only until the crates.io package is published. Use the
+locked git install path for now:
 
 ```bash
 cargo install --git https://github.com/Hyena0x/timepour.git --locked
