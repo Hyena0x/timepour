@@ -4,6 +4,11 @@
 
 No unreleased changes.
 
+## v0.1.2 - 2026-04-22
+
+- Prepared the first crates.io release.
+- Updated the install instructions to use `cargo install timepour --locked`.
+
 ## v0.1.1 - 2026-04-22
 
 - Clarified the current git-only install path while the crates.io release is pending.

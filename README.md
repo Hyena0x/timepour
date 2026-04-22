@@ -21,14 +21,19 @@ Small tool. Strong presence.
 
 ## Install
 
-Timepour is currently git-only until the crates.io package is published. Use the
-locked git install path for now:
+Install from crates.io:
 
 ```bash
-cargo install --git https://github.com/Hyena0x/timepour.git --locked
+cargo install timepour --locked
 ```
 
-Or build locally:
+Or install a specific GitHub release tag:
+
+```bash
+cargo install --git https://github.com/Hyena0x/timepour.git --tag v0.1.2 --locked
+```
+
+Build locally:
 
 ```bash
 git clone https://github.com/Hyena0x/timepour.git
