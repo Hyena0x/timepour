@@ -6,6 +6,8 @@
   [![CI](https://img.shields.io/github/actions/workflow/status/Hyena0x/timepour/rust.yml?label=ci)](https://github.com/Hyena0x/timepour/actions)
 </div>
 
+![Timepour demo](assets/timepour-demo.gif)
+
 Timepour makes a focus session feel physical.
 
 Instead of watching a clock tick down, you watch the terminal slowly fill with a deterministic stack of falling blocks. Focus runs glow red. Breaks cool down. When time is up, the board drops into grayscale and the session is over.
